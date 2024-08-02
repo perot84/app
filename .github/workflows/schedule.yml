@@ -15,6 +15,17 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        
+    # Paso 2: Añadir pasos de depuración
+    - name: Debug information
+      run: |
+        python -V
+        pip list
+    
+    # Paso 4: Listar contenido del directorio
+    - name: List directory contents
+      run: ls -R
+      
     - name: Run script
       run: |
         python app.py
