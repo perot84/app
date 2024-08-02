@@ -147,7 +147,7 @@ fig.update_layout(
 )
 
 # Guardar el gráfico como un archivo HTML
-html_file_path = 'grafico_proyectos_git_2.html'
+html_file_path = 'grafico_proyectos_git.html'
 pyo.plot(fig, filename=html_file_path, auto_open=False)
 
 #########
