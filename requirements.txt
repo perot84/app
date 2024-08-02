@@ -5,3 +5,4 @@ requests[security]==2.31.0
 nbformat==5.9.0
 nbconvert==7.16.4
 numpy==1.26.4
+matplotlib==3.7.1
