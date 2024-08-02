@@ -1,7 +1,7 @@
 name: Run app.py every 60 minutes
 on:
   schedule:
-    - cron: '55 * * * *'
+    - cron: '0 * * * *'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,12 +13,12 @@ jobs:
         python-version: '3.x'
 
     - name: Cache pip
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
             
     - name: Install dependencies
       run: |
