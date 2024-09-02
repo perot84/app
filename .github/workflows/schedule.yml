@@ -1,4 +1,6 @@
 name: Generate Project Dashboard
+permissions:
+  contents: write  # Otorga permiso de escritura al repositorio
 on:
   schedule:
     - cron: '40 * * * *'  # Ejecutar cada hora a los 30 minutos
