@@ -33,13 +33,17 @@ jobs:
     - name: Generate dashboard
       run: |
         python app.py
-    - name: Find and move HTML file
+    - name: Move HTML to docs folder if necessary
       run: |
         # Busca el archivo HTML generado en el directorio actual
-        HTML_FILE=$(find . -name "*.html")
-        echo "Archivo HTML encontrado: $HTML_FILE"
-        mkdir -p docs
-        mv $HTML_FILE docs/grafico_proyectos_git.html
+        HTML_FILE=$(find . -name "grafico_proyectos_git.html")
+        if [ "$HTML_FILE" != "./docs/grafico_proyectos_git.html" ]; then
+          echo "Moviendo $HTML_FILE a ./docs/grafico_proyectos_git.html"
+          mkdir -p docs
+          mv $HTML_FILE ./docs/grafico_proyectos_git.html
+        else
+          echo "El archivo ya está en la carpeta docs."
+        fi
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
