@@ -146,31 +146,7 @@ fig.update_layout(
     bargroupgap=0.1
 )
 
-# Guardar el gráfico como un archivo HTML
-html_file_path = 'grafico_proyectos_git.html'
+# Guardar el gráfico como un archivo HTML en tu repositorio de GitHub
+html_file_path = 'docs/grafico_proyectos_git.html'
 pyo.plot(fig, filename=html_file_path, auto_open=False)
 
-#########
-# Configuración de Nextcloud
-nextcloud_url = 'https://peregirona.hopto.org/remote.php/webdav/00.SocialData/Indicadors/grafico_proyectos_git.html'
-nextcloud_user = 'ncp'  # Cambia esto por tu usuario de Nextcloud
-nextcloud_password = 'serral84'  # Cambia esto por tu contraseña de Nextcloud
-
-# Guardar el gráfico como un archivo HTML
-html_file_path = 'grafico_proyectos_git.html'
-pyo.plot(fig, filename=html_file_path, auto_open=False)
-
-# Subir el archivo HTML a Nextcloud
-with open(html_file_path, 'rb') as file:
-    try:
-        response = requests.put(nextcloud_url, data=file, auth=HTTPBasicAuth(nextcloud_user, nextcloud_password))
-        
-        # Comprobar si la subida fue exitosa
-        if response.status_code in (201, 204):
-            print("El archivo se ha subido correctamente a Nextcloud.")
-        else:
-            print(f"Error al subir el archivo: {response.status_code} - {response.text}")
-    except Exception as e:
-        print(f"Ocurrió un error al intentar subir el archivo: {e}")
-
-######
