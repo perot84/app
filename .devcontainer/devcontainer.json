@@ -1,7 +1,7 @@
 name: Generate Project Dashboard
 on:
   schedule:
-    - cron: '30 * * * *'  # Ejecutar cada hora a los 30 minutos
+    - cron: '16 * * * *'  # Ejecutar cada hora a los 30 minutos
 jobs:
   generate-dashboard:
     runs-on: ubuntu-latest
