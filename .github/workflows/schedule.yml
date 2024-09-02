@@ -3,15 +3,12 @@ permissions:
   contents: write  # Otorga permiso de escritura al repositorio
 on:
   schedule:
-    - cron: '15 * * * *'  # Ejecutar cada hora a los 15 minutos
+    - cron: '40 * * * *'  # Ejecutar cada hora a los 30 minutos
   workflow_dispatch:  # Permitir que se ejecute manualmente
 
 jobs:
   generate-dashboard:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: read
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -38,19 +35,17 @@ jobs:
     - name: Generate dashboard
       run: |
         python app.py
-    - name: Publish HTML
-      uses: actions/upload-artifact@v4
-      with:
-        name: dashboard-html
-        path: docs/grafico_proyectos_git.html
-    - name: Get artifact download URL
-      id: get_artifact_url
+    - name: Move HTML to docs folder
       run: |
-        echo "ARTIFACT_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
-    - name: Print artifact URL
-      run: echo "Artifact URL: ${{ steps.get_artifact_url.outputs.ARTIFACT_URL }}"
+        mkdir -p docs
+        mv path/to/generated_html.html docs/grafico_proyectos_git.html  # Ajusta la ruta según corresponda
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
-        commit_message: "Update project dashboard"
-        branch: ${{ github.ref }}  # Especificar la rama donde se harán los commits
+        commit_message: Update project dashboard
+        file_pattern: docs/
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs
