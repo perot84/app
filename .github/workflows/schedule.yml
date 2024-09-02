@@ -30,15 +30,16 @@ jobs:
       run: |
         python -V
         pip list
-    - name: List directory contents
-      run: ls -R
     - name: Generate dashboard
       run: |
         python app.py
-    - name: Move HTML to docs folder
+    - name: Find and move HTML file
       run: |
+        # Busca el archivo HTML generado en el directorio actual
+        HTML_FILE=$(find . -name "*.html")
+        echo "Archivo HTML encontrado: $HTML_FILE"
         mkdir -p docs
-        mv path/to/generated_html.html docs/grafico_proyectos_git.html  # Ajusta la ruta según corresponda
+        mv $HTML_FILE docs/grafico_proyectos_git.html
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
