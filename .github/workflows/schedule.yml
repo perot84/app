@@ -1,7 +1,7 @@
 name: Generate Project Dashboard
 on:
   schedule:
-    - cron: '10 * * * *'  # Ejecutar cada hora a los 30 minutos
+    - cron: '40 * * * *'  # Ejecutar cada hora a los 30 minutos
 jobs:
   generate-dashboard:
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
       run: ls -R
     - name: Generate dashboard
       run: |
-        python generate_dashboard.py
+        python app.py
     - name: Publish HTML
       uses: actions/upload-artifact@v4
       with:
