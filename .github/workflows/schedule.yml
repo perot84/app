@@ -10,7 +10,7 @@ jobs:
   generate-dashboard:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       actions: read
     steps:
     - uses: actions/checkout@v4
@@ -37,20 +37,18 @@ jobs:
       run: ls -R
     - name: Generate dashboard
       run: |
-        python app.py
+        app.py
     - name: Publish HTML
       uses: actions/upload-artifact@v4
       with:
         name: dashboard-html
         path: docs/grafico_proyectos_git.html
     - name: Get artifact download URL
-      uses: actions/upload-artifact@v4
-      id: artifact
-      with:
-        name: dashboard-html
-        path: docs/grafico_proyectos_git.html
+      id: get_artifact_url
+      run: |
+        echo "ARTIFACT_URL=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_OUTPUT
     - name: Print artifact URL
-      run: echo "Artifact URL: ${{ steps.artifact.outputs.artifact-path }}"
+      run: echo "Artifact URL: ${{ steps.get_artifact_url.outputs.ARTIFACT_URL }}"
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
