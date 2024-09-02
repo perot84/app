@@ -40,6 +40,25 @@ jobs:
       with:
         name: dashboard-html
         path: docs/grafico_proyectos_git.html
+    - name: Get Artifact URL
+      id: get_artifact_url
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            run_id: context.runId,
+          });
+          const matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+            return artifact.name == "dashboard-html"
+          })[0];
+          const downloadUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}/artifacts/${matchArtifact.id}`;
+          console.log(`Artifact URL: ${downloadUrl}`);
+          core.setOutput('artifact_url', downloadUrl);
+    - name: Print Artifact URL
+      run: echo "The artifact URL is ${{ steps.get_artifact_url.outputs.artifact_url }}"
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
