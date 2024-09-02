@@ -7,7 +7,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 # Configuración
-api_key = 'patwzUJdBTJiYQrlc.01d208baf2de8f8d7aebc4572ca13165c1a5f5bf80d24cc89eb0b5faa4b542c9'
+api_key = 'AIRTABLE_API_KEY'
 base_id = 'appKQ9kJIdZBsApeF'
 table_name = 'tblydD1afp6lS0ngt'
 
