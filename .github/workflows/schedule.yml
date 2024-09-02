@@ -1,17 +1,16 @@
-name: Run app.py every 60 minutes
+name: Generate Project Dashboard
 on:
   schedule:
-    - cron: '30 * * * *'
+    - cron: '40 * * * *'  # Ejecutar cada hora a los 30 minutos
 jobs:
-  build:
+  generate-dashboard:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v2
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
-
+        python-version: 3.9
     - name: Cache pip
       uses: actions/cache@v3
       with:
@@ -19,22 +18,25 @@ jobs:
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
-            
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        
-    # Paso 2: Añadir pasos de depuración
     - name: Debug information
       run: |
         python -V
         pip list
-    
-    # Paso 4: Listar contenido del directorio
     - name: List directory contents
       run: ls -R
-      
-    - name: Run script
+    - name: Generate dashboard
       run: |
-        python app.py
+        python generate_dashboard.py
+    - name: Publish HTML
+      uses: actions/upload-artifact@v2
+      with:
+        name: dashboard-html
+        path: docs/grafico_proyectos_git.html
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Update project dashboard
