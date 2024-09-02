@@ -3,7 +3,7 @@ permissions:
   contents: write  # Otorga permiso de escritura al repositorio
 on:
   schedule:
-    - cron: '40 * * * *'  # Ejecutar cada hora a los 30 minutos
+    - cron: '15 * * * *'  # Ejecutar cada hora a los 30 minutos
   workflow_dispatch:  # Permitir que se ejecute manualmente
 
 jobs:
