@@ -5,8 +5,7 @@ on:
   schedule:
     - cron: '40 * * * *'  # Ejecutar cada hora a los 30 minutos
   workflow_dispatch:  # Permitir que se ejecute manualmente
-env:
-  AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+
 jobs:
   generate-dashboard:
     runs-on: ubuntu-latest
@@ -32,6 +31,8 @@ jobs:
         python -V
         pip list
     - name: Generate dashboard
+      env:
+        AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
       run: |
         python app.py
     - name: Move HTML to docs folder if necessary
