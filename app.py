@@ -6,6 +6,8 @@ import plotly.offline as pyo
 import requests
 from requests.auth import HTTPBasicAuth
 
+API_KEY = os.environ['AIRTABLE_API_KEY']
+
 # Configuración
 api_key = 'AIRTABLE_API_KEY'
 base_id = 'appKQ9kJIdZBsApeF'
