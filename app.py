@@ -5,6 +5,7 @@ import datetime
 import plotly.offline as pyo
 import requests
 from requests.auth import HTTPBasicAuth
+import os
 
 API_KEY = os.environ['AIRTABLE_API_KEY']
 
