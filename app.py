@@ -10,12 +10,12 @@ import os
 API_KEY = os.environ['AIRTABLE_API_KEY']
 
 # Configuración
-api_key = 'AIRTABLE_API_KEY'
+API_KEY = 'AIRTABLE_API_KEY'
 base_id = 'appKQ9kJIdZBsApeF'
 table_name = 'tblydD1afp6lS0ngt'
 
 # Conectar a la tabla
-table = Table(api_key, base_id, table_name)
+table = Table(API_KEY, base_id, table_name)
 
 # Obtener todos los registros
 records = table.all()
