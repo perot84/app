@@ -10,7 +10,7 @@ import os
 API_KEY = os.environ['AIRTABLE_API_KEY']
 
 # Configuración
-API_KEY = 'AIRTABLE_API_KEY'
+#API_KEY = 'AIRTABLE_API_KEY'
 base_id = 'appKQ9kJIdZBsApeF'
 table_name = 'tblydD1afp6lS0ngt'
 
