@@ -1,9 +1,11 @@
-name: Generate Project Dashboard
+name: Generate Project Dashboard and Another Task
 permissions:
   contents: write  # Otorga permiso de escritura al repositorio
+
 on:
   schedule:
-    - cron: '40 * * * *'  # Ejecutar cada hora a los 30 minutos
+    - cron: '40 1 * * *'  # Ejecutar cada hora a los 40 minutos
+    - cron: '30 2 * * *'  # Ejecutar el segundo job cada hora a los 30 minutos
   workflow_dispatch:  # Permitir que se ejecute manualmente
 
 jobs:
@@ -26,25 +28,59 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Debug information
-      run: |
-        python -V
-        pip list
     - name: Generate dashboard
       env:
         AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
       run: |
-        python app.py
+        Indicadors per concepte.py
     - name: Move HTML to docs folder if necessary
       run: |
-        # Busca el archivo HTML generado en el directorio actual
-        HTML_FILE=$(find . -name "grafico_proyectos_git.html")
-        if [ "$HTML_FILE" != "./docs/grafico_proyectos_git.html" ]; then
-          echo "Moviendo $HTML_FILE a ./docs/grafico_proyectos_git.html"
+        HTML_FILE=$(find . -name "indicadors_per_concepte.html")
+        if [ "$HTML_FILE" != "./docs/indicadors_per_concepte.html" ]; then
           mkdir -p docs
-          mv $HTML_FILE ./docs/grafico_proyectos_git.html
-        else
-          echo "El archivo ya está en la carpeta docs."
+          mv $HTML_FILE ./docs/indicadors_per_concepte.html
+        fi
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: Update project dashboard
+        file_pattern: docs/
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs
+
+  another-task:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Execute another script
+      env:
+        AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+      run: |
+        Indicadors per projecte.py  # Cambia esto por tu otro script
+    - name: Move HTML to docs folder if necessary
+      run: |
+        HTML_FILE=$(find . -name "indicadors_per_projecte.html")
+        if [ "$HTML_FILE" != "./docs/indicadors_per_projecte.html" ]; then
+          mkdir -p docs
+          mv $HTML_FILE ./docs/indicadors_per_projecte.html
         fi
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
