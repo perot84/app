@@ -32,7 +32,7 @@ jobs:
       env:
         AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
       run: |
-        Indicadors per concepte.py
+        python indicadors_per_concepte.py
     - name: Move HTML to docs folder if necessary
       run: |
         HTML_FILE=$(find . -name "indicadors_per_concepte.html")
@@ -74,7 +74,7 @@ jobs:
       env:
         AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
       run: |
-        Indicadors per projecte.py  # Cambia esto por tu otro script
+        python indicadors_per_projecte.py  # Cambia esto por tu otro script
     - name: Move HTML to docs folder if necessary
       run: |
         HTML_FILE=$(find . -name "indicadors_per_projecte.html")
