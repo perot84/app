@@ -15,7 +15,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.PAT_TOKEN }}
         fetch-depth: 0
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -46,7 +45,7 @@ jobs:
         fi
     - name: Commit and push changes
       env:
-        PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
@@ -54,7 +53,7 @@ jobs:
         git reset --hard origin/main
         git add docs/
         git commit -m "Update project dashboard" || echo "No changes to commit"
-        git push https://$PAT_TOKEN@github.com/${{ github.repository }}.git HEAD:main
+        git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:main
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
@@ -67,7 +66,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.PAT_TOKEN }}
         fetch-depth: 0
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -98,7 +96,7 @@ jobs:
         fi
     - name: Commit and push changes
       env:
-        PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
@@ -106,7 +104,7 @@ jobs:
         git reset --hard origin/main
         git add docs/
         git commit -m "Update project dashboard" || echo "No changes to commit"
-        git push https://$PAT_TOKEN@github.com/${{ github.repository }}.git HEAD:main
+        git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:main
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
