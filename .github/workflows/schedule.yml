@@ -1,4 +1,4 @@
-name: Generate Project Dashboard and Another Task
+name: Indicadors
 permissions:
   contents: write  # Otorga permiso de escritura al repositorio
 
@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch all history for all branches and tags
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -40,14 +42,16 @@ jobs:
           mkdir -p docs
           mv $HTML_FILE ./docs/indicadors_per_concepte.html
         fi
-    - name: Pull latest changes
-      run: git pull origin main
-      
-    - name: Commit changes
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: Update project dashboard
-        file_pattern: docs/
+    - name: Configure Git
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+    - name: Commit and push changes
+      run: |
+        git pull origin main
+        git add docs/
+        git commit -m "Update project dashboard" || echo "No changes to commit"
+        git push origin main
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
@@ -58,6 +62,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch all history for all branches and tags
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -85,12 +91,16 @@ jobs:
           mkdir -p docs
           mv $HTML_FILE ./docs/indicadors_per_projecte.html
         fi
-    
-    - name: Commit changes
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: Update project dashboard
-        file_pattern: docs/
+    - name: Configure Git
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+    - name: Commit and push changes
+      run: |
+        git pull origin main
+        git add docs/
+        git commit -m "Update project dashboard" || echo "No changes to commit"
+        git push origin main
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
