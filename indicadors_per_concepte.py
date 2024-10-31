@@ -17,7 +17,7 @@ from dash import Dash, dcc, html, Input, Output
 
 
 # Config2uración
-api_key = 'patwzUJdBTJiYQrlc.01d208baf2de8f8d7aebc4572ca13165c1a5f5bf80d24cc89eb0b5faa4b542c9'
+api_key = os.environ['AIRTABLE_API_KEY']
 base_id = 'appKQ9kJIdZBsApeF'
 table_name = 'tblydD1afp6lS0ngt'
 
