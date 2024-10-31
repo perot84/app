@@ -14,6 +14,7 @@ from requests.auth import HTTPBasicAuth
 from plotly.subplots import make_subplots
 import dash
 from dash import Dash, dcc, html, Input, Output
+import os
 
 
 # Config2uración
