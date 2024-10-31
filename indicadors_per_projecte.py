@@ -1,9 +1,11 @@
-import os
 from pyairtable import Table
 import pandas as pd
-import plotly.graph_objs as go
-import plotly.io as pio
+import plotly.graph_objects as go
 import datetime
+import plotly.offline as pyo
+import requests
+from requests.auth import HTTPBasicAuth
+import os
 
 # Configuración
 api_key = os.environ['AIRTABLE_API_KEY']
