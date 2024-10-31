@@ -1,52 +1,112 @@
 name: Indicadors
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: write  # Otorga permiso de escritura al repositorio
 
 on:
   schedule:
-    - cron: '40 1 * * *'
-    - cron: '30 2 * * *'
-  workflow_dispatch:
+    - cron: '40 1 * * *'  # Ejecutar cada hora a los 40 minutos
+    - cron: '30 2 * * *'  # Ejecutar el segundo job cada hora a los 30 minutos
+  workflow_dispatch:  # Permitir que se ejecute manualmente
 
 jobs:
-  generate-and-deploy:
+  generate-dashboard:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Set up Python
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-        cache: 'pip'
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Generate dashboards
+    - name: Generate dashboard
       env:
         AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
       run: |
         python indicadors_per_concepte.py
-        python indicadors_per_projecte.py
-    - name: Prepare docs directory
+    - name: Move HTML to docs folder if necessary
       run: |
-        mkdir -p docs
-        mv *.html docs/ 2>/dev/null || true
-    - name: Configure Git
+        HTML_FILE=$(find . -name "indicadors_per_concepte.html")
+        if [ "$HTML_FILE" != "./docs/indicadors_per_concepte.html" ]; then
+          mkdir -p docs
+          mv $HTML_FILE ./docs/indicadors_per_concepte.html
+        fi
+    - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-    - name: Commit changes
-      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git fetch origin main
+        git reset --hard origin/main
         git add docs/
-        git commit -m "Update dashboards" || echo "No changes to commit"
-        git push
-    - name: Setup Pages
-      uses: actions/configure-pages@v4
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: docs
+        git commit -m "Update project dashboard" || echo "No changes to commit"
+        git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:main
     - name: Deploy to GitHub Pages
-      uses: actions/deploy-pages@v4
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs
+
+  another-task:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Execute another script
+      env:
+        AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+      run: |
+        python indicadors_per_projecte.py  # Cambia esto por tu otro script
+    - name: Move HTML to docs folder if necessary
+      run: |
+        HTML_FILE=$(find . -name "indicadors_per_projecte.html")
+        if [ "$HTML_FILE" != "./docs/indicadors_per_projecte.html" ]; then
+          mkdir -p docs
+          mv $HTML_FILE ./docs/indicadors_per_projecte.html
+        fi
+    - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git fetch origin main
+        git reset --hard origin/main
+        git add docs/
+        git commit -m "Update project dashboard" || echo "No changes to commit"
+        git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:main
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs
